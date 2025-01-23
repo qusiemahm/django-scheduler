@@ -13,10 +13,18 @@ from schedule.models import (
 
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug")
+    """
+    Admin configuration for Calendar model.
+    """
+    list_display = ("name", "slug", "vendor", "store")  # Display vendor and store
     prepopulated_fields = {"slug": ("name",)}
-    search_fields = ["name"]
-    fieldsets = ((None, {"fields": [("name", "slug")]}),)
+    search_fields = ["name", "vendor", "store__name"]  # Allow searching by vendor and store names
+    list_filter = ["vendor", "store"]  # Add filters for vendors and stores
+    fieldsets = (
+        (None, {
+            "fields": [("name", "slug"), "vendor", "store"]
+        }),
+    )
 
 
 @admin.register(CalendarRelation)

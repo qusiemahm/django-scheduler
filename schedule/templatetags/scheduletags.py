@@ -85,9 +85,9 @@ def options(context, occurrence):
     ):
         context["edit_occurrence"] = occurrence.get_edit_url()
         context["cancel_occurrence"] = occurrence.get_cancel_url()
-        context["delete_event"] = reverse("delete_event", args=(occurrence.event.id,))
+        context["delete_event"] = reverse("dashboard:delete_event", args=(occurrence.event.id,))
         context["edit_event"] = reverse(
-            "edit_event", args=(occurrence.event.calendar.slug, occurrence.event.id)
+            "dashboard:edit_event", args=(occurrence.event.calendar.slug, occurrence.event.id)
         )
     else:
         context["edit_event"] = context["delete_event"] = ""
@@ -99,7 +99,7 @@ def create_event_url(context, calendar, slot):
     context.update({"calendar": calendar, "MEDIA_URL": getattr(settings, "MEDIA_URL")})
     lookup_context = {"calendar_slug": calendar.slug}
     context["create_event_url"] = "{}{}".format(
-        reverse("calendar_create_event", kwargs=lookup_context),
+        reverse("dashboard:calendar_create_event", kwargs=lookup_context),
         querystring_for_date(slot),
     )
     return context
@@ -244,7 +244,7 @@ def prevnext(target, calendar, period, fmt=None):
         "calendar": calendar,
         "period": period,
         "period_name": format(period.start, fmt),
-        "target": target,
+        "target": f"dashboard:{target}",
     }
     return context
 

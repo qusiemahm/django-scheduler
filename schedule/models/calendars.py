@@ -1,3 +1,4 @@
+import uuid
 from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -9,7 +10,10 @@ from django.utils.translation import gettext_lazy as _
 
 from schedule.settings import USE_FULLCALENDAR
 from schedule.utils import EventListManager
+from server.apps.vendor.models import Vendor
+from oscar.core.loading import get_model
 
+Store = get_model('stores', 'Store')
 
 class CalendarManager(models.Manager):
     """
@@ -138,16 +142,45 @@ class Calendar(models.Model):
     >>> calendar.events.add(event)
     """
 
-    name = models.CharField(_("name"), max_length=200)
-    slug = models.SlugField(_("slug"), max_length=200, unique=True)
+    name = models.CharField(max_length=255, unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     objects = CalendarManager()
 
+    vendor = models.ForeignKey(
+        Vendor,
+        on_delete=models.CASCADE,
+        related_name="calendars",
+        verbose_name=_("Vendor"),
+    )
+    store = models.ForeignKey(
+        Store,
+        on_delete=models.CASCADE,
+        related_name="calendars",
+        verbose_name=_("Store"),
+        null=True,
+        blank=True,
+    )
+    
     class Meta:
         verbose_name = _("calendar")
         verbose_name_plural = _("calendars")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["vendor", "store"],
+                name="unique_calendar_per_vendor_and_store",
+            )
+        ]
+
+    def save(self, *args, **kwargs):
+        # Auto-generate name and slug if not provided
+        if not self.name:
+            self.name = f"{self.vendor}-{self.store}-{uuid.uuid4()}"
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.store.name
 
     @property
     def events(self):
@@ -178,7 +211,7 @@ class Calendar(models.Model):
     def get_absolute_url(self):
         if USE_FULLCALENDAR:
             return reverse("fullcalendar", kwargs={"calendar_slug": self.slug})
-        return reverse("calendar_home", kwargs={"calendar_slug": self.slug})
+        return reverse("dashboard:calendar_home", kwargs={"calendar_slug": self.slug})
 
 
 class CalendarRelationManager(models.Manager):

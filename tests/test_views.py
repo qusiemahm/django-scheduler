@@ -36,7 +36,7 @@ class TestViews(TestCase):
 
     @override_settings(USE_TZ=False)
     def test_timezone_off(self):
-        url = reverse("day_calendar", kwargs={"calendar_slug": self.calendar.slug})
+        url = reverse("dashboard:day_calendar", kwargs={"calendar_slug": self.calendar.slug})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

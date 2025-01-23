@@ -1,39 +1,69 @@
+{% extends 'oscar/dashboard/layout.html' %}
 {% load i18n static %}
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}" xml:lang="{{ LANGUAGE_CODE }}" lang="{{ LANGUAGE_CODE }}">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>{% if site_name %}{{ site_name }} : {% endif %}{% block head_title %}{% endblock %}</title>
-        <link rel="stylesheet" href="{% static "bootstrap/dist/css/bootstrap.css" %}" type="text/css" media="screen">
-        <script type="text/javascript" src="{% static "jquery/dist/jquery.js" %}"></script>
-        <script type="text/javascript" src="{% static "jquery-ui/jquery-ui.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "bootstrap/dist/js/bootstrap.js" %}"></script>
-        <script type="text/javascript" src="{% static "schedule.js" %}"></script>
-        <link rel="stylesheet" href="{% static "schedule.css" %}" type="text/css" media="screen">
-        <link rel="stylesheet" href="{% static "jquery-ui/themes/base/all.css" %}" type="text/css" media="screen">
-        {% block extra_head %}
+
+{% block body_class %}{{ block.super }} calendar{% endblock %}
+
+{% block title %}
+    {% trans "Calendar" %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard:index' %}">{% trans "Dashboard" %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {% trans "Calendar" %}
+            </li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block header %}
+    <!-- <div class="page-header">
+        <h1>{% trans "This is a demo of a django-schedule calendar" %}</h1>
+    </div> -->
+{% endblock header %}
+
+{% block dashboard_content %}
+    {% if messages %}
+        <ul id="messages" class="alert alert-info">
+            {% for message in messages %}
+                <li id="message_{{ forloop.counter }}">
+                    <a href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;">
+                        <small>{% trans "clear" %}</small>
+                    </a>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="card card-body">
+        {% block body %}
         {% endblock %}
-    </head>
+    </div>
+{% endblock dashboard_content %}
 
-    <body>
-    <h3 id="demo">{% trans "This is a demo of a django-schedule calendar" %}</h3>
-    <p style="clear:both">
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.css' %}" type="text/css" media="screen">
+    <link rel="stylesheet" href="{% static 'schedule.css' %}" type="text/css" media="screen">
+    <link rel="stylesheet" href="{% static 'jquery-ui/themes/base/all.css' %}" type="text/css" media="screen">
+    <script type="text/javascript" src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'schedule.js' %}"></script>
+{% endblock extra_head %}
 
-        <div id="body">
-            {% if messages %}
-                <ul id="messages">
-                    {% for message in messages %}
-                    <li id="message_{{ forloop.counter }}"><a href="#" onclick="$('#message_{{ forloop.counter }}').fadeOut(); return false;"><small>{% trans "clear" %}</small></a> {{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+{% block footer %}
+    <div id="footer" class="mt-4 text-center">
+        <p>{% trans "Footer content here." %}</p>
+    </div>
+{% endblock footer %}
 
-            {% block body %}
-            {% endblock %}
-
-        </div>
-
-        <div id="footer">{% block footer %}{% endblock %}</div>
-
-    </body>
-</html>
+{% block onbodyload %}
+    {{ block.super }}
+    // Initialize any specific JavaScript required for this demo
+{% endblock onbodyload %}

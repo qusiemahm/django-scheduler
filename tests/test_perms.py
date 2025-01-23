@@ -47,7 +47,7 @@ class TestPermissions(TestCase):
         )
 
         self.urls_to_check = [
-            reverse("calendar_create_event", kwargs={"calendar_slug": self.cal1.slug}),
+            reverse("dashboard:calendar_create_event", kwargs={"calendar_slug": self.cal1.slug}),
             reverse(
                 "edit_event",
                 kwargs={"calendar_slug": self.cal1.slug, "event_id": self.event1.id},

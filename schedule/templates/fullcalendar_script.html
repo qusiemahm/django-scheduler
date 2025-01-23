@@ -30,12 +30,12 @@ $(document).ready(function() {
     function setModalProperties(type, event){
         if(type == 'edit'){
             var tYPE = '{% trans "Edit" %}';
-            var all_url = "{% url 'edit_event' calendar_slug 12345 %}".replace(/12345/, event.event_id);
+            var all_url = "{% url 'dashboard:edit_event' calendar_slug 12345 %}".replace(/12345/, event.event_id);
             if (event.existed){
-                var this_url = "{% url 'edit_occurrence' 12345 6789 %}".replace(/12345/, event.event_id).replace(/6789/, event.id);
+                var this_url = "{% url 'dashboard:edit_occurrence' 12345 6789 %}".replace(/12345/, event.event_id).replace(/6789/, event.id);
             }
             else{
-                var this_url = "{% url 'edit_occurrence_by_date' 123 234 345 456 567 678 789 %}".replace(
+                var this_url = "{% url 'dashboard:edit_occurrence_by_date' 123 234 345 456 567 678 789 %}".replace(
                         /123/, event.event_id).replace(
                         /234/, event.year).replace(
                         /345/, event.month).replace(
@@ -47,12 +47,12 @@ $(document).ready(function() {
         }
         else if(type == 'delete'){
             var tYPE = '{% trans "Delete" %}';
-            var all_url = "{% url 'delete_event' 12345 %}".replace(/12345/, event.event_id);
+            var all_url = "{% url 'dashboard:delete_event' 12345 %}".replace(/12345/, event.event_id);
             if (event.existed){
-                var this_url = "{% url 'cancel_occurrence' 12345 6789 %}".replace(/12345/, event.event_id).replace(/6789/, event.id);
+                var this_url = "{% url 'dashboard:cancel_occurrence' 12345 6789 %}".replace(/12345/, event.event_id).replace(/6789/, event.id);
             }
             else{
-                var this_url = "{% url 'cancel_occurrence_by_date' 123 234 345 456 567 678 789 %}".replace(
+                var this_url = "{% url 'dashboard:cancel_occurrence_by_date' 123 234 345 456 567 678 789 %}".replace(
                         /123/, event.event_id).replace(
                         /234/, event.year).replace(
                         /345/, event.month).replace(

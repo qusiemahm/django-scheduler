@@ -646,11 +646,11 @@ class Occurrence(models.Model):
     def get_absolute_url(self):
         if self.pk is not None:
             return reverse(
-                "occurrence",
+                "dashboard:occurrence",
                 kwargs={"occurrence_id": self.pk, "event_id": self.event_id},
             )
         return reverse(
-            "occurrence_by_date",
+            "dashboard:occurrence_by_date",
             kwargs={
                 "event_id": self.event_id,
                 "year": self.start.year,
@@ -665,11 +665,11 @@ class Occurrence(models.Model):
     def get_cancel_url(self):
         if self.pk is not None:
             return reverse(
-                "cancel_occurrence",
+                "dashboard:cancel_occurrence",
                 kwargs={"occurrence_id": self.pk, "event_id": self.event_id},
             )
         return reverse(
-            "cancel_occurrence_by_date",
+            "dashboard:cancel_occurrence_by_date",
             kwargs={
                 "event_id": self.event_id,
                 "year": self.start.year,
@@ -684,11 +684,15 @@ class Occurrence(models.Model):
     def get_edit_url(self):
         if self.pk is not None:
             return reverse(
-                "edit_occurrence",
+                "dashboard:edit_occurrence",
                 kwargs={"occurrence_id": self.pk, "event_id": self.event_id},
             )
+
+
+
+            
         return reverse(
-            "edit_occurrence_by_date",
+            "dashboard:edit_occurrence_by_date",
             kwargs={
                 "event_id": self.event_id,
                 "year": self.start.year,
